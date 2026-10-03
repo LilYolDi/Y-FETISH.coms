@@ -11,17 +11,18 @@ content="width=device-width, initial-scale=1">
 
 <title>Создать объявление — Y-FETISH</title>
 
-<link rel="stylesheet"
+<link
+rel="stylesheet"
 href="/style.css">
 
 </head>
-
 
 <body>
 
 <header>
 
-<a href="/ads"
+<a
+href="/ads"
 class="logo">
 Y-FETISH
 </a>
@@ -49,12 +50,43 @@ Y-FETISH
 <form id="adForm">
 
 
+<label for="category">
+Категория
+</label>
+
+<select
+id="category"
+required>
+
+<option value="">
+Выберите категорию
+</option>
+
+<option>Он ищет её</option>
+<option>Она ищет его</option>
+<option>Он ищет его</option>
+<option>Она ищет её</option>
+<option>Пара ищет его</option>
+<option>Пара ищет её</option>
+<option>Он ищет пару</option>
+<option>Она ищет пару</option>
+<option>Пара ищет пару</option>
+<option>Госпожа ищет рабов</option>
+<option>Рабы ищут госпожу</option>
+<option>Господин ищет рабов</option>
+<option>Рабы ищут господина</option>
+<option>Разное</option>
+
+</select>
+
+
 <label for="city">
 Ваш город
 </label>
 
-
-<select id="city" required>
+<select
+id="city"
+required>
 
 <option value="">
 Выберите город
@@ -87,7 +119,6 @@ Y-FETISH
 Текст объявления
 </label>
 
-
 <textarea
 id="body"
 maxlength="10000"
@@ -99,7 +130,6 @@ required></textarea>
 Ваш Telegram
 </label>
 
-
 <input
 type="text"
 id="telegram"
@@ -108,7 +138,8 @@ placeholder="@username"
 required>
 
 
-<div id="error"
+<div
+id="error"
 style="display:none;">
 </div>
 
@@ -140,25 +171,28 @@ document.getElementById("error");
 
 form.addEventListener(
 "submit",
-async (event) => {
+async event => {
 
   event.preventDefault();
 
   error.style.display = "none";
 
 
+  const category =
+    document
+      .getElementById("category")
+      .value;
+
   const city =
     document
       .getElementById("city")
       .value;
-
 
   const body =
     document
       .getElementById("body")
       .value
       .trim();
-
 
   const telegram =
     document
@@ -170,24 +204,25 @@ async (event) => {
   try {
 
     const response =
-      await fetch("/api/ads", {
+      await fetch(
+        "/api/ads",
+        {
+          method: "POST",
 
-        method: "POST",
+          headers: {
+            "Content-Type":
+              "application/json"
+          },
 
-        headers: {
-          "Content-Type":
-            "application/json"
-        },
-
-        body: JSON.stringify({
-
-          city,
-          body,
-          telegram
-
-        })
-
-      });
+          body:
+            JSON.stringify({
+              category,
+              city,
+              body,
+              telegram
+            })
+        }
+      );
 
 
     const data =
@@ -221,7 +256,6 @@ async (event) => {
 });
 
 </script>
-
 
 </body>
 
