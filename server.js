@@ -16,8 +16,8 @@ const BASE_URL = (process.env.BASE_URL || "").replace(/\/$/, "");
 // ===============================
 
 const supabase = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_ROLE_KEY
+  https://cdyuxiicllnfrwssigsr.supabase.co/rest/v1/
+  sb_secret_EWrD5hJqes3r_Z5bo-JhDw_mZDfi01g
 );
 
 
