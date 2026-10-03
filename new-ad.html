@@ -1,264 +1,224 @@
-<!DOCTYPE html>
+<!doctype html>
+
 <html lang="ru">
 
 <head>
 
-  <meta charset="UTF-8">
+<meta charset="UTF-8">
 
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  >
+<meta name="viewport"
+content="width=device-width, initial-scale=1">
 
-  <title>
-    Создать объявление | Y-FETISH
-  </title>
+<title>Создать объявление — Y-FETISH</title>
 
-  <meta
-    name="description"
-    content="Создайте текстовое объявление на Y-FETISH."
-  >
-
-  <link
-    rel="stylesheet"
-    href="style.css"
-  >
+<link rel="stylesheet"
+href="/style.css">
 
 </head>
 
 
 <body>
 
+<header>
 
-<header class="topbar">
+<a href="/ads"
+class="logo">
+Y-FETISH
+</a>
 
-  <a
-    class="logo"
-    href="/ads"
-  >
-    Y-FETISH
-  </a>
+<nav>
 
+<a href="/ads">
+Объявления
+</a>
 
-  <nav class="header-nav">
-
-    <a
-      class="header-link"
-      href="ads.html"
-    >
-      Объявления
-    </a>
-
-  </nav>
+</nav>
 
 </header>
 
 
-<main class="page">
+<main class="container">
+
+<section class="card">
+
+<h1>
+Создать объявление
+</h1>
 
 
-<section class="hero">
-
-  <h1>
-    Создать объявление
-  </h1>
-
-  <div class="muted">
-    Напишите текст объявления и опубликуйте его.
-  </div>
-
-</section>
+<form id="adForm">
 
 
-<section class="form-card">
+<label for="city">
+Ваш город
+</label>
+
+
+<select id="city" required>
+
+<option value="">
+Выберите город
+</option>
+
+<option>Киев</option>
+<option>Львов</option>
+<option>Одесса</option>
+<option>Харьков</option>
+<option>Днепр</option>
+<option>Запорожье</option>
+<option>Винница</option>
+<option>Ивано-Франковск</option>
+<option>Тернополь</option>
+<option>Ужгород</option>
+<option>Черновцы</option>
+<option>Полтава</option>
+<option>Черкассы</option>
+<option>Житомир</option>
+<option>Хмельницкий</option>
+<option>Ровно</option>
+<option>Луцк</option>
+<option>Николаев</option>
+<option>Другой город</option>
+
+</select>
+
+
+<label for="body">
+Текст объявления
+</label>
 
 
 <textarea
-  id="body"
-  maxlength="10000"
-  placeholder="Например:
-
-Ищу раба в Ивано-Франковске для общения и знакомства.
-
-Расскажите подробнее о том, кого вы ищете..."
-></textarea>
+id="body"
+maxlength="10000"
+placeholder="Напишите текст вашего объявления..."
+required></textarea>
 
 
-<div class="counter">
+<label for="telegram">
+Ваш Telegram
+</label>
 
-  <span id="count">
-    0
-  </span>
 
-  / 10000
+<input
+type="text"
+id="telegram"
+maxlength="100"
+placeholder="@username"
+required>
 
+
+<div id="error"
+style="display:none;">
 </div>
 
 
-<div class="form-actions">
+<button
+type="submit"
+class="button">
 
-  <a
-    class="secondary-btn"
-    href="/ads"
-  >
-    ← Все объявления
-  </a>
+Опубликовать
 
-
-  <button
-    class="primary-btn"
-    id="publish"
-    type="button"
-  >
-    Опубликовать
-  </button>
-
-</div>
+</button>
 
 
-<div
-  class="error"
-  id="error"
-></div>
-
-
-<div
-  class="success"
-  id="success"
-></div>
-
+</form>
 
 </section>
-
 
 </main>
 
 
 <script>
 
-const body =
-  document.getElementById("body");
-
-const count =
-  document.getElementById("count");
-
-const publish =
-  document.getElementById("publish");
+const form =
+document.getElementById("adForm");
 
 const error =
-  document.getElementById("error");
-
-const success =
-  document.getElementById("success");
+document.getElementById("error");
 
 
-body.addEventListener(
-  "input",
-  () => {
+form.addEventListener(
+"submit",
+async (event) => {
 
-    count.textContent =
-      body.value.length;
+  event.preventDefault();
 
-  }
-);
+  error.style.display = "none";
 
 
-publish.addEventListener(
-  "click",
-  async () => {
-
-    error.style.display = "none";
-
-    success.style.display = "none";
+  const city =
+    document
+      .getElementById("city")
+      .value;
 
 
-    const text =
-      body.value.trim();
+  const body =
+    document
+      .getElementById("body")
+      .value
+      .trim();
 
 
-    if (text.length < 10) {
-
-      error.textContent =
-        "Напишите минимум 10 символов.";
-
-      error.style.display =
-        "block";
-
-      return;
-
-    }
+  const telegram =
+    document
+      .getElementById("telegram")
+      .value
+      .trim();
 
 
-    publish.disabled = true;
+  try {
 
-    publish.textContent =
-      "Публикация...";
+    const response =
+      await fetch("/api/ads", {
 
+        method: "POST",
 
-    try {
+        headers: {
+          "Content-Type":
+            "application/json"
+        },
 
-      const response =
-        await fetch(
-          "/api/ads",
-          {
+        body: JSON.stringify({
 
-            method: "POST",
+          city,
+          body,
+          telegram
 
-            headers: {
-              "Content-Type":
-                "application/json"
-            },
+        })
 
-            body:
-              JSON.stringify({
-                body: text
-              })
-
-          }
-        );
+      });
 
 
-      const data =
-        await response.json();
+    const data =
+      await response.json();
 
 
-      if (!response.ok) {
+    if (!response.ok) {
 
-        throw new Error(
-          data.error ||
-          "Ошибка публикации"
-        );
-
-      }
-
-
-      // После публикации
-      // сразу открываем страницу объявления
-
-      window.location.href =
-        data.url;
-
-
-    } catch (e) {
-
-      error.textContent =
-        e.message ||
-        "Ошибка публикации";
-
-      error.style.display =
-        "block";
-
-
-      publish.disabled =
-        false;
-
-      publish.textContent =
-        "Опубликовать";
+      throw new Error(
+        data.error ||
+        "Ошибка публикации."
+      );
 
     }
 
+
+    window.location.href =
+      data.url;
+
+
+  } catch (err) {
+
+    error.textContent =
+      err.message;
+
+    error.style.display =
+      "block";
+
   }
-);
+
+});
 
 </script>
 
