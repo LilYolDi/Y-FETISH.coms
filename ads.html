@@ -1,38 +1,27 @@
 <!doctype html>
-
 <html lang="ru">
 
 <head>
-
 <meta charset="UTF-8">
-
-<meta name="viewport"
-content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
 <title>Объявления — Y-FETISH</title>
 
 <meta
-name="description"
-content="Объявления Y-FETISH по городам Украины.">
+  name="description"
+  content="Объявления Y-FETISH по городам Украины."
+>
 
-<link
-rel="stylesheet"
-href="/style.css">
-
+<link rel="stylesheet" href="/style.css">
 </head>
-
 
 <body>
 
-
 <header>
 
-<a
-href="/ads"
-class="logo">
+<a href="/ads" class="logo">
 Y-FETISH
 </a>
-
 
 <nav>
 
@@ -40,9 +29,7 @@ Y-FETISH
 Объявления
 </a>
 
-<a
-href="/ads/new"
-class="button small">
+<a href="/ads/new" class="button small">
 Создать
 </a>
 
@@ -54,6 +41,103 @@ class="button small">
 <main class="container">
 
 
+<!-- КАТЕГОРИИ ТОЛЬКО НА ГЛАВНОЙ -->
+
+<div class="categories">
+
+<a href="/ads"
+class="category-link"
+data-category="">
+Все
+</a>
+
+<a href="/ads?category=Он%20ищет%20её"
+class="category-link"
+data-category="Он ищет её">
+Он ищет её
+</a>
+
+<a href="/ads?category=Она%20ищет%20его"
+class="category-link"
+data-category="Она ищет его">
+Она ищет его
+</a>
+
+<a href="/ads?category=Он%20ищет%20его"
+class="category-link"
+data-category="Он ищет его">
+Он ищет его
+</a>
+
+<a href="/ads?category=Она%20ищет%20её"
+class="category-link"
+data-category="Она ищет её">
+Она ищет её
+</a>
+
+<a href="/ads?category=Пара%20ищет%20его"
+class="category-link"
+data-category="Пара ищет его">
+Пара ищет его
+</a>
+
+<a href="/ads?category=Пара%20ищет%20её"
+class="category-link"
+data-category="Пара ищет её">
+Пара ищет её
+</a>
+
+<a href="/ads?category=Он%20ищет%20пару"
+class="category-link"
+data-category="Он ищет пару">
+Он ищет пару
+</a>
+
+<a href="/ads?category=Она%20ищет%20пару"
+class="category-link"
+data-category="Она ищет пару">
+Она ищет пару
+</a>
+
+<a href="/ads?category=Пара%20ищет%20пару"
+class="category-link"
+data-category="Пара ищет пару">
+Пара ищет пару
+</a>
+
+<a href="/ads?category=Госпожа%20ищет%20рабов"
+class="category-link"
+data-category="Госпожа ищет рабов">
+Госпожа ищет рабов
+</a>
+
+<a href="/ads?category=Рабы%20ищут%20госпожу"
+class="category-link"
+data-category="Рабы ищут госпожу">
+Рабы ищут госпожу
+</a>
+
+<a href="/ads?category=Господин%20ищет%20рабов"
+class="category-link"
+data-category="Господин ищет рабов">
+Господин ищет рабов
+</a>
+
+<a href="/ads?category=Рабы%20ищут%20господина"
+class="category-link"
+data-category="Рабы ищут господина">
+Рабы ищут господина
+</a>
+
+<a href="/ads?category=Разное"
+class="category-link"
+data-category="Разное">
+Разное
+</a>
+
+</div>
+
+
 <div class="ads-top">
 
 <h1>
@@ -63,10 +147,7 @@ class="button small">
 </div>
 
 
-<div
-id="adsList"
-class="ads-list">
-
+<div id="adsList" class="ads-list">
 </div>
 
 
@@ -81,163 +162,187 @@ document.getElementById("adsList");
 
 function escapeHtml(value) {
 
-  return String(value)
-
-    .replaceAll("&", "&amp;")
-
-    .replaceAll("<", "&lt;")
-
-    .replaceAll(">", "&gt;")
-
-    .replaceAll('"', "&quot;")
-
-    .replaceAll("'", "&#039;");
+return String(value)
+.replaceAll("&", "&amp;")
+.replaceAll("<", "&lt;")
+.replaceAll(">", "&gt;")
+.replaceAll('"', "&quot;")
+.replaceAll("'", "&#039;");
 
 }
 
 
 async function loadAds() {
 
-  try {
+try {
 
-    const response =
-      await fetch("/api/ads");
+const params =
+new URLSearchParams(
+window.location.search
+);
 
-
-    if (!response.ok) {
-      throw new Error(
-        "Ошибка загрузки объявлений"
-      );
-    }
+const category =
+params.get("category");
 
 
-    const ads =
-      await response.json();
+document
+.querySelectorAll(".category-link")
+.forEach(link => {
+
+link.classList.remove("active");
+
+if (
+(link.dataset.category || "") ===
+(category || "")
+) {
+
+link.classList.add("active");
+
+}
+
+});
 
 
-    if (!ads.length) {
-
-      adsList.innerHTML = `
-
-        <div class="empty">
-
-          <p>
-            Пока нет объявлений.
-          </p>
-
-          <a
-            href="/ads/new"
-            class="button">
-
-            Создать первое объявление
-
-          </a>
-
-        </div>
-
-      `;
-
-      return;
-    }
+const apiUrl =
+category
+? `/api/ads?category=${encodeURIComponent(category)}`
+: "/api/ads";
 
 
-    adsList.innerHTML =
-      ads.map(ad => {
-
-        const title =
-          escapeHtml(ad.title);
-
-        const city =
-          escapeHtml(
-            ad.city || "Украина"
-          );
-
-        const text =
-          escapeHtml(
-            String(ad.body || "")
-              .replace(/\s+/g, " ")
-              .slice(0, 280)
-          );
+const response =
+await fetch(apiUrl);
 
 
-        const date =
-          new Date(ad.created_at)
-            .toLocaleDateString(
-              "ru-RU"
-            );
+if (!response.ok) {
+
+throw new Error(
+"Ошибка загрузки объявлений"
+);
+
+}
 
 
-        return `
-
-          <a
-            class="ad-card"
-            href="/ads/${encodeURIComponent(ad.slug)}">
+const ads =
+await response.json();
 
 
-            <h2 class="ad-card-title">
+if (!ads.length) {
 
-              ${title}
+adsList.innerHTML = `
 
-            </h2>
+<div class="empty">
 
+<p>
+${
+category
+? "В этой категории пока нет объявлений."
+: "Пока нет объявлений."
+}
+</p>
 
-            <div
-              class="ad-card-city">
+<a
+href="/ads/new"
+class="button">
 
-              📍 ${city}
+Создать объявление
 
-            </div>
+</a>
 
+</div>
 
-            <p
-              class="ad-card-text">
+`;
 
-              ${text}
+return;
 
-            </p>
-
-
-            <div
-              class="ad-card-date">
-
-              ${date}
-
-            </div>
-
-
-          </a>
-
-        `;
-
-      }).join("");
+}
 
 
-  } catch (error) {
+adsList.innerHTML =
+ads.map(ad => {
 
-    console.error(error);
+const title =
+escapeHtml(ad.title);
+
+const city =
+escapeHtml(
+ad.city || "Украина"
+);
+
+const categoryText =
+escapeHtml(
+ad.category || "Разное"
+);
+
+const text =
+escapeHtml(
+String(ad.body || "")
+.replace(/\s+/g, " ")
+.slice(0, 280)
+);
+
+const date =
+new Date(ad.created_at)
+.toLocaleDateString("ru-RU");
 
 
-    adsList.innerHTML = `
+return `
 
-      <div class="empty">
+<a
+class="ad-card"
+href="/ads/${encodeURIComponent(ad.slug)}">
 
-        <p>
-          Не удалось загрузить объявления.
-        </p>
+<div class="ad-card-category">
+${categoryText}
+</div>
 
-        <button
-          class="button"
-          onclick="loadAds()">
+<h2 class="ad-card-title">
+${title}
+</h2>
 
-          Повторить
+<div class="ad-card-city">
+📍 ${city}
+</div>
 
-        </button>
+<p class="ad-card-text">
+${text}
+</p>
 
-      </div>
+<div class="ad-card-date">
+${date}
+</div>
 
-    `;
+</a>
 
-  }
+`;
+
+}).join("");
+
+
+} catch (error) {
+
+console.error(error);
+
+adsList.innerHTML = `
+
+<div class="empty">
+
+<p>
+Не удалось загрузить объявления.
+</p>
+
+<button
+class="button"
+onclick="loadAds()">
+
+Повторить
+
+</button>
+
+</div>
+
+`;
+
+}
 
 }
 
@@ -246,7 +351,5 @@ loadAds();
 
 </script>
 
-
 </body>
-
 </html>
