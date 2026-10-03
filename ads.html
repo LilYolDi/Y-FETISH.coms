@@ -1,26 +1,23 @@
-<!DOCTYPE html>
+<!doctype html>
+
 <html lang="ru">
 
 <head>
 
-  <meta charset="UTF-8">
+<meta charset="UTF-8">
 
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  >
+<meta name="viewport"
+content="width=device-width, initial-scale=1">
 
-  <title>Объявления | Y-FETISH</title>
+<title>Объявления — Y-FETISH</title>
 
-  <meta
-    name="description"
-    content="Текстовые объявления пользователей Y-FETISH."
-  >
+<meta
+name="description"
+content="Объявления Y-FETISH по городам Украины.">
 
-  <link
-    rel="stylesheet"
-    href="style.css"
-  >
+<link
+rel="stylesheet"
+href="/style.css">
 
 </head>
 
@@ -28,64 +25,49 @@
 <body>
 
 
-<header class="topbar">
+<header>
 
-  <a
-    class="logo"
-    href="ads"
-  >
-    Y-FETISH
-  </a>
-
-
-  <nav class="header-nav">
-
-    <a
-      class="header-link active"
-      href="ads"
-    >
-      Объявления
-    </a>
+<a
+href="/ads"
+class="logo">
+Y-FETISH
+</a>
 
 
-    <a
-      class="header-btn"
-      href="new-ad.html"
-    >
-      + Создать объявление
-    </a>
+<nav>
 
-  </nav>
+<a href="/ads">
+Объявления
+</a>
+
+<a
+href="/ads/new"
+class="button small">
+Создать
+</a>
+
+</nav>
 
 </header>
 
 
-<main class="page">
+<main class="container">
 
 
-<section class="hero">
+<div class="ads-top">
 
-  <h1>
-    Объявления
-  </h1>
+<h1>
+Объявления
+</h1>
 
-  <div class="muted">
-    Текстовые объявления пользователей Y-FETISH
-  </div>
-
-</section>
+</div>
 
 
-<section
-  id="list"
-  class="ad-list"
->
+<div
+id="adsList"
+class="ads-list">
 
-  <div class="muted">
-    Загрузка объявлений...
-  </div>
-
-</section>
+</div>
 
 
 </main>
@@ -93,11 +75,28 @@
 
 <script>
 
+const adsList =
+document.getElementById("adsList");
+
+
+function escapeHtml(value) {
+
+  return String(value)
+
+    .replaceAll("&", "&amp;")
+
+    .replaceAll("<", "&lt;")
+
+    .replaceAll(">", "&gt;")
+
+    .replaceAll('"', "&quot;")
+
+    .replaceAll("'", "&#039;");
+
+}
+
+
 async function loadAds() {
-
-  const list =
-    document.getElementById("list");
-
 
   try {
 
@@ -106,7 +105,9 @@ async function loadAds() {
 
 
     if (!response.ok) {
-      throw new Error();
+      throw new Error(
+        "Ошибка загрузки объявлений"
+      );
     }
 
 
@@ -116,21 +117,20 @@ async function loadAds() {
 
     if (!ads.length) {
 
-      list.innerHTML = `
+      adsList.innerHTML = `
 
-        <div class="form-card">
+        <div class="empty">
 
-          <div class="muted">
+          <p>
             Пока нет объявлений.
-          </div>
-
-          <br>
+          </p>
 
           <a
-            class="primary-btn"
             href="/ads/new"
-          >
+            class="button">
+
             Создать первое объявление
+
           </a>
 
         </div>
@@ -138,58 +138,106 @@ async function loadAds() {
       `;
 
       return;
-
     }
 
 
-    list.innerHTML =
-      ads.map(ad => `
+    adsList.innerHTML =
+      ads.map(ad => {
 
-        <a
-          class="list-card"
-          href="/ads/${encodeURIComponent(ad.slug)}"
-        >
+        const title =
+          escapeHtml(ad.title);
 
-          <h2>
-            ${escapeHtml(ad.title)}
-          </h2>
+        const city =
+          escapeHtml(
+            ad.city || "Украина"
+          );
 
-          <p>
-            ${escapeHtml(ad.body)}
-          </p>
-
-          <div class="card-more">
-            Читать объявление →
-          </div>
-
-        </a>
-
-      `).join("");
+        const text =
+          escapeHtml(
+            String(ad.body || "")
+              .replace(/\s+/g, " ")
+              .slice(0, 280)
+          );
 
 
-  } catch {
+        const date =
+          new Date(ad.created_at)
+            .toLocaleDateString(
+              "ru-RU"
+            );
 
-    list.innerHTML = `
 
-      <div class="muted">
-        Не удалось загрузить объявления.
+        return `
+
+          <a
+            class="ad-card"
+            href="/ads/${encodeURIComponent(ad.slug)}">
+
+
+            <h2 class="ad-card-title">
+
+              ${title}
+
+            </h2>
+
+
+            <div
+              class="ad-card-city">
+
+              📍 ${city}
+
+            </div>
+
+
+            <p
+              class="ad-card-text">
+
+              ${text}
+
+            </p>
+
+
+            <div
+              class="ad-card-date">
+
+              ${date}
+
+            </div>
+
+
+          </a>
+
+        `;
+
+      }).join("");
+
+
+  } catch (error) {
+
+    console.error(error);
+
+
+    adsList.innerHTML = `
+
+      <div class="empty">
+
+        <p>
+          Не удалось загрузить объявления.
+        </p>
+
+        <button
+          class="button"
+          onclick="loadAds()">
+
+          Повторить
+
+        </button>
+
       </div>
 
     `;
 
   }
-
-}
-
-
-function escapeHtml(text) {
-
-  return String(text)
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
 
 }
 
