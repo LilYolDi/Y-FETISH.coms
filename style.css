@@ -42,6 +42,14 @@ a {
   font-weight: 800;
 }
 
+.logo-y {
+  color: #ff0000;
+}
+
+.logo-fetish {
+  color: #eeeeef;
+}
+
 .header-button {
   display: inline-flex;
   align-items: center;
@@ -445,10 +453,3 @@ textarea:focus {
 
 }
 
-.logo-y {
-  color: #ff0000;
-}
-
-.logo-fetish {
-  color: #eeeeef;
-}
