@@ -6,15 +6,10 @@
 
 <meta charset="UTF-8">
 
-<meta
-name="viewport"
+<meta name="viewport"
 content="width=device-width, initial-scale=1">
 
-<title>Объявления — Y-FETISH</title>
-
-<meta
-name="description"
-content="Объявления Y-FETISH по городам Украины.">
+<title>Создать объявление — Y-FETISH</title>
 
 <link
 rel="stylesheet"
@@ -24,7 +19,6 @@ href="/style.css">
 
 <body>
 
-
 <header>
 
 <a
@@ -33,17 +27,10 @@ class="logo">
 Y-FETISH
 </a>
 
-
 <nav>
 
 <a href="/ads">
 Объявления
-</a>
-
-<a
-href="/ads/new"
-class="button small">
-Создать
 </a>
 
 </nav>
@@ -53,336 +40,222 @@ class="button small">
 
 <main class="container">
 
-
-<div class="categories">
-
-<a href="/ads"
-class="category-link active">
-Все
-</a>
-
-<a href="/ads?category=Он%20ищет%20её"
-class="category-link">
-Он ищет её
-</a>
-
-<a href="/ads?category=Она%20ищет%20его"
-class="category-link">
-Она ищет его
-</a>
-
-<a href="/ads?category=Он%20ищет%20его"
-class="category-link">
-Он ищет его
-</a>
-
-<a href="/ads?category=Она%20ищет%20её"
-class="category-link">
-Она ищет её
-</a>
-
-<a href="/ads?category=Пара%20ищет%20его"
-class="category-link">
-Пара ищет его
-</a>
-
-<a href="/ads?category=Пара%20ищет%20её"
-class="category-link">
-Пара ищет её
-</a>
-
-<a href="/ads?category=Он%20ищет%20пару"
-class="category-link">
-Он ищет пару
-</a>
-
-<a href="/ads?category=Она%20ищет%20пару"
-class="category-link">
-Она ищет пару
-</a>
-
-<a href="/ads?category=Пара%20ищет%20пару"
-class="category-link">
-Пара ищет пару
-</a>
-
-<a
-href="/ads?category=Госпожа%20ищет%20рабов"
-class="category-link">
-Госпожа ищет рабов
-</a>
-
-<a
-href="/ads?category=Рабы%20ищут%20госпожу"
-class="category-link">
-Рабы ищут госпожу
-</a>
-
-<a
-href="/ads?category=Господин%20ищет%20рабов"
-class="category-link">
-Господин ищет рабов
-</a>
-
-<a
-href="/ads?category=Рабы%20ищут%20господина"
-class="category-link">
-Рабы ищут господина
-</a>
-
-<a
-href="/ads?category=Разное"
-class="category-link">
-Разное
-</a>
-
-</div>
-
-
-<div class="ads-top">
+<section class="card">
 
 <h1>
-Объявления
+Создать объявление
 </h1>
 
-</div>
+
+<form id="adForm">
+
+
+<label for="category">
+Категория
+</label>
+
+<select
+id="category"
+required>
+
+<option value="">
+Выберите категорию
+</option>
+
+<option>Он ищет её</option>
+<option>Она ищет его</option>
+<option>Он ищет его</option>
+<option>Она ищет её</option>
+<option>Пара ищет его</option>
+<option>Пара ищет её</option>
+<option>Он ищет пару</option>
+<option>Она ищет пару</option>
+<option>Пара ищет пару</option>
+<option>Госпожа ищет рабов</option>
+<option>Рабы ищут госпожу</option>
+<option>Господин ищет рабов</option>
+<option>Рабы ищут господина</option>
+<option>Разное</option>
+
+</select>
+
+
+<label for="city">
+Ваш город
+</label>
+
+<select
+id="city"
+required>
+
+<option value="">
+Выберите город
+</option>
+
+<option>Киев</option>
+<option>Львов</option>
+<option>Одесса</option>
+<option>Харьков</option>
+<option>Днепр</option>
+<option>Запорожье</option>
+<option>Винница</option>
+<option>Ивано-Франковск</option>
+<option>Тернополь</option>
+<option>Ужгород</option>
+<option>Черновцы</option>
+<option>Полтава</option>
+<option>Черкассы</option>
+<option>Житомир</option>
+<option>Хмельницкий</option>
+<option>Ровно</option>
+<option>Луцк</option>
+<option>Николаев</option>
+<option>Другой город</option>
+
+</select>
+
+
+<label for="body">
+Текст объявления
+</label>
+
+<textarea
+id="body"
+maxlength="10000"
+placeholder="Напишите текст вашего объявления..."
+required></textarea>
+
+
+<label for="telegram">
+Ваш Telegram
+</label>
+
+<input
+type="text"
+id="telegram"
+maxlength="100"
+placeholder="@username"
+required>
 
 
 <div
-id="adsList"
-class="ads-list">
+id="error"
+style="display:none;">
 </div>
 
+
+<button
+type="submit"
+class="button">
+
+Опубликовать
+
+</button>
+
+
+</form>
+
+</section>
 
 </main>
 
 
 <script>
 
-const adsList =
-document.getElementById("adsList");
+const form =
+document.getElementById("adForm");
+
+const error =
+document.getElementById("error");
 
 
-function escapeHtml(value) {
+form.addEventListener(
+"submit",
+async event => {
 
-  return String(value)
+  event.preventDefault();
 
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
-
-}
+  error.style.display = "none";
 
 
-async function loadAds() {
+  const category =
+    document
+      .getElementById("category")
+      .value;
+
+  const city =
+    document
+      .getElementById("city")
+      .value;
+
+  const body =
+    document
+      .getElementById("body")
+      .value
+      .trim();
+
+  const telegram =
+    document
+      .getElementById("telegram")
+      .value
+      .trim();
+
 
   try {
 
-    const params =
-      new URLSearchParams(
-        window.location.search
+    const response =
+      await fetch(
+        "/api/ads",
+        {
+          method: "POST",
+
+          headers: {
+            "Content-Type":
+              "application/json"
+          },
+
+          body:
+            JSON.stringify({
+              category,
+              city,
+              body,
+              telegram
+            })
+        }
       );
 
-    const category =
-      params.get("category");
 
-
-    if (category) {
-
-      document
-        .querySelectorAll(
-          ".category-link"
-        )
-        .forEach(link => {
-
-          link.classList.remove(
-            "active"
-          );
-
-          if (
-            decodeURIComponent(
-              link.href.split(
-                "category="
-              )[1] || ""
-            ) === category
-          ) {
-
-            link.classList.add(
-              "active"
-            );
-
-          }
-
-        });
-
-    }
-
-
-    const apiUrl =
-      category
-        ? `/api/ads?category=${encodeURIComponent(category)}`
-        : "/api/ads";
-
-
-    const response =
-      await fetch(apiUrl);
+    const data =
+      await response.json();
 
 
     if (!response.ok) {
 
       throw new Error(
-        "Ошибка загрузки объявлений"
+        data.error ||
+        "Ошибка публикации."
       );
 
     }
 
 
-    const ads =
-      await response.json();
+    window.location.href =
+      data.url;
 
 
-    if (!ads.length) {
+  } catch (err) {
 
-      adsList.innerHTML = `
+    error.textContent =
+      err.message;
 
-        <div class="empty">
-
-          <p>
-            В этой категории пока нет объявлений.
-          </p>
-
-          <a
-            href="/ads/new"
-            class="button">
-
-            Создать объявление
-
-          </a>
-
-        </div>
-
-      `;
-
-      return;
-
-    }
-
-
-    adsList.innerHTML =
-      ads.map(ad => {
-
-        const title =
-          escapeHtml(ad.title);
-
-        const city =
-          escapeHtml(
-            ad.city || "Украина"
-          );
-
-        const categoryText =
-          escapeHtml(
-            ad.category || "Разное"
-          );
-
-        const text =
-          escapeHtml(
-            String(ad.body || "")
-              .replace(/\s+/g, " ")
-              .slice(0, 280)
-          );
-
-
-        const date =
-          new Date(ad.created_at)
-            .toLocaleDateString(
-              "ru-RU"
-            );
-
-
-        return `
-
-          <a
-            class="ad-card"
-            href="/ads/${encodeURIComponent(ad.slug)}">
-
-            <div
-              class="ad-card-category">
-
-              ${categoryText}
-
-            </div>
-
-            <h2
-              class="ad-card-title">
-
-              ${title}
-
-            </h2>
-
-            <div
-              class="ad-card-city">
-
-              📍 ${city}
-
-            </div>
-
-            <p
-              class="ad-card-text">
-
-              ${text}
-
-            </p>
-
-            <div
-              class="ad-card-date">
-
-              ${date}
-
-            </div>
-
-          </a>
-
-        `;
-
-      }).join("");
-
-
-  } catch (error) {
-
-    console.error(error);
-
-
-    adsList.innerHTML = `
-
-      <div class="empty">
-
-        <p>
-          Не удалось загрузить объявления.
-        </p>
-
-        <button
-          class="button"
-          onclick="loadAds()">
-
-          Повторить
-
-        </button>
-
-      </div>
-
-    `;
+    error.style.display =
+      "block";
 
   }
 
-}
-
-
-loadAds();
+});
 
 </script>
-
 
 </body>
 
