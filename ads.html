@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>Объявления | Y-FETISH</title>
+
+  <meta
+    name="description"
+    content="Текстовые объявления пользователей Y-FETISH."
+  >
+
+  <link
+    rel="stylesheet"
+    href="style.css"
+  >
+
+</head>
+
+
+<body>
+
+
+<header class="topbar">
+
+  <a
+    class="logo"
+    href="ads"
+  >
+    Y-FETISH
+  </a>
+
+
+  <nav class="header-nav">
+
+    <a
+      class="header-link active"
+      href="ads"
+    >
+      Объявления
+    </a>
+
+
+    <a
+      class="header-btn"
+      href="new-ad.html"
+    >
+      + Создать объявление
+    </a>
+
+  </nav>
+
+</header>
+
+
+<main class="page">
+
+
+<section class="hero">
+
+  <h1>
+    Объявления
+  </h1>
+
+  <div class="muted">
+    Текстовые объявления пользователей Y-FETISH
+  </div>
+
+</section>
+
+
+<section
+  id="list"
+  class="ad-list"
+>
+
+  <div class="muted">
+    Загрузка объявлений...
+  </div>
+
+</section>
+
+
+</main>
+
+
+<script>
+
+async function loadAds() {
+
+  const list =
+    document.getElementById("list");
+
+
+  try {
+
+    const response =
+      await fetch("/api/ads");
+
+
+    if (!response.ok) {
+      throw new Error();
+    }
+
+
+    const ads =
+      await response.json();
+
+
+    if (!ads.length) {
+
+      list.innerHTML = `
+
+        <div class="form-card">
+
+          <div class="muted">
+            Пока нет объявлений.
+          </div>
+
+          <br>
+
+          <a
+            class="primary-btn"
+            href="/ads/new"
+          >
+            Создать первое объявление
+          </a>
+
+        </div>
+
+      `;
+
+      return;
+
+    }
+
+
+    list.innerHTML =
+      ads.map(ad => `
+
+        <a
+          class="list-card"
+          href="/ads/${encodeURIComponent(ad.slug)}"
+        >
+
+          <h2>
+            ${escapeHtml(ad.title)}
+          </h2>
+
+          <p>
+            ${escapeHtml(ad.body)}
+          </p>
+
+          <div class="card-more">
+            Читать объявление →
+          </div>
+
+        </a>
+
+      `).join("");
+
+
+  } catch {
+
+    list.innerHTML = `
+
+      <div class="muted">
+        Не удалось загрузить объявления.
+      </div>
+
+    `;
+
+  }
+
+}
+
+
+function escapeHtml(text) {
+
+  return String(text)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+
+}
+
+
+loadAds();
+
+</script>
+
+
+</body>
+
+</html>

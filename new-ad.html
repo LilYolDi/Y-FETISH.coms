@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>
+    Создать объявление | Y-FETISH
+  </title>
+
+  <meta
+    name="description"
+    content="Создайте текстовое объявление на Y-FETISH."
+  >
+
+  <link
+    rel="stylesheet"
+    href="style.css"
+  >
+
+</head>
+
+
+<body>
+
+
+<header class="topbar">
+
+  <a
+    class="logo"
+    href="/ads"
+  >
+    Y-FETISH
+  </a>
+
+
+  <nav class="header-nav">
+
+    <a
+      class="header-link"
+      href="ads.html"
+    >
+      Объявления
+    </a>
+
+  </nav>
+
+</header>
+
+
+<main class="page">
+
+
+<section class="hero">
+
+  <h1>
+    Создать объявление
+  </h1>
+
+  <div class="muted">
+    Напишите текст объявления и опубликуйте его.
+  </div>
+
+</section>
+
+
+<section class="form-card">
+
+
+<textarea
+  id="body"
+  maxlength="10000"
+  placeholder="Например:
+
+Ищу раба в Ивано-Франковске для общения и знакомства.
+
+Расскажите подробнее о том, кого вы ищете..."
+></textarea>
+
+
+<div class="counter">
+
+  <span id="count">
+    0
+  </span>
+
+  / 10000
+
+</div>
+
+
+<div class="form-actions">
+
+  <a
+    class="secondary-btn"
+    href="/ads"
+  >
+    ← Все объявления
+  </a>
+
+
+  <button
+    class="primary-btn"
+    id="publish"
+    type="button"
+  >
+    Опубликовать
+  </button>
+
+</div>
+
+
+<div
+  class="error"
+  id="error"
+></div>
+
+
+<div
+  class="success"
+  id="success"
+></div>
+
+
+</section>
+
+
+</main>
+
+
+<script>
+
+const body =
+  document.getElementById("body");
+
+const count =
+  document.getElementById("count");
+
+const publish =
+  document.getElementById("publish");
+
+const error =
+  document.getElementById("error");
+
+const success =
+  document.getElementById("success");
+
+
+body.addEventListener(
+  "input",
+  () => {
+
+    count.textContent =
+      body.value.length;
+
+  }
+);
+
+
+publish.addEventListener(
+  "click",
+  async () => {
+
+    error.style.display = "none";
+
+    success.style.display = "none";
+
+
+    const text =
+      body.value.trim();
+
+
+    if (text.length < 10) {
+
+      error.textContent =
+        "Напишите минимум 10 символов.";
+
+      error.style.display =
+        "block";
+
+      return;
+
+    }
+
+
+    publish.disabled = true;
+
+    publish.textContent =
+      "Публикация...";
+
+
+    try {
+
+      const response =
+        await fetch(
+          "/api/ads",
+          {
+
+            method: "POST",
+
+            headers: {
+              "Content-Type":
+                "application/json"
+            },
+
+            body:
+              JSON.stringify({
+                body: text
+              })
+
+          }
+        );
+
+
+      const data =
+        await response.json();
+
+
+      if (!response.ok) {
+
+        throw new Error(
+          data.error ||
+          "Ошибка публикации"
+        );
+
+      }
+
+
+      // После публикации
+      // сразу открываем страницу объявления
+
+      window.location.href =
+        data.url;
+
+
+    } catch (e) {
+
+      error.textContent =
+        e.message ||
+        "Ошибка публикации";
+
+      error.style.display =
+        "block";
+
+
+      publish.disabled =
+        false;
+
+      publish.textContent =
+        "Опубликовать";
+
+    }
+
+  }
+);
+
+</script>
+
+
+</body>
+
+</html>
