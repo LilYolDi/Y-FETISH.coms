@@ -14,6 +14,23 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY
 );
 
+const CATEGORIES = [
+  "Он ищет её",
+  "Она ищет его",
+  "Он ищет его",
+  "Она ищет её",
+  "Пара ищет его",
+  "Пара ищет её",
+  "Он ищет пару",
+  "Она ищет пару",
+  "Пара ищет пару",
+  "Госпожа ищет рабов",
+  "Рабы ищут госпожу",
+  "Господин ищет рабов",
+  "Рабы ищут господина",
+  "Разное"
+];
+
 app.use(express.json({ limit: "100kb" }));
 app.use(express.urlencoded({ extended: true, limit: "100kb" }));
 app.use(express.static(__dirname));
@@ -30,35 +47,52 @@ app.get("/ads/new", (req, res) => {
   res.sendFile(path.join(__dirname, "new-ad.html"));
 });
 
-
-// Список объявлений
 app.get("/api/ads", async (req, res) => {
   try {
-    const { data, error } = await supabase
+    const category = String(req.query.category || "").trim();
+
+    let query = supabase
       .from("text_ads")
-      .select("id,title,body,city,telegram,slug,created_at")
+      .select("id,title,body,city,telegram,category,slug,created_at")
       .order("created_at", { ascending: false })
       .limit(100);
 
+    if (category && CATEGORIES.includes(category)) {
+      query = query.eq("category", category);
+    }
+
+    const { data, error } = await query;
+
     if (error) {
       console.error(error);
-      return res.status(500).json({ error: error.message });
+      return res.status(500).json({
+        error: error.message
+      });
     }
 
     res.json(data || []);
+
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "Ошибка сервера." });
+
+    res.status(500).json({
+      error: "Ошибка сервера."
+    });
   }
 });
 
-
-// Создание объявления
 app.post("/api/ads", async (req, res) => {
   try {
     const city = String(req.body.city || "").trim();
     const body = String(req.body.body || "").trim();
     const telegram = String(req.body.telegram || "").trim();
+    const category = String(req.body.category || "").trim();
+
+    if (!category || !CATEGORIES.includes(category)) {
+      return res.status(400).json({
+        error: "Выберите категорию."
+      });
+    }
 
     if (!city) {
       return res.status(400).json({
@@ -105,7 +139,6 @@ app.post("/api/ads", async (req, res) => {
       firstLine.slice(0, 120) ||
       "Объявление Y-FETISH";
 
-
     function slugify(text) {
       const map = {
         а: "a", б: "b", в: "v", г: "g", ґ: "g",
@@ -130,7 +163,6 @@ app.post("/api/ads", async (req, res) => {
         .slice(0, 90) || "obyavlenie";
     }
 
-
     let slug = slugify(title);
 
     const { data: existing } = await supabase
@@ -143,7 +175,6 @@ app.post("/api/ads", async (req, res) => {
       slug = `${slug}-${Date.now().toString(36)}`;
     }
 
-
     const { data, error } = await supabase
       .from("text_ads")
       .insert({
@@ -151,9 +182,10 @@ app.post("/api/ads", async (req, res) => {
         body,
         city,
         telegram: username,
+        category,
         slug
       })
-      .select("id,title,body,city,telegram,slug,created_at")
+      .select("id,title,body,city,telegram,category,slug,created_at")
       .single();
 
     if (error) {
@@ -178,13 +210,11 @@ app.post("/api/ads", async (req, res) => {
   }
 });
 
-
-// Отдельная страница объявления
 app.get("/ads/:slug", async (req, res) => {
   try {
     const { data, error } = await supabase
       .from("text_ads")
-      .select("id,title,body,city,telegram,slug,created_at")
+      .select("id,title,body,city,telegram,category,slug,created_at")
       .eq("slug", req.params.slug)
       .maybeSingle();
 
@@ -199,23 +229,19 @@ app.get("/ads/:slug", async (req, res) => {
 <link rel="stylesheet" href="/style.css">
 </head>
 <body>
-
 <header>
 <a href="/ads" class="logo">Y-FETISH</a>
 </header>
-
 <main class="container">
 <section class="card">
 <h1>Объявление не найдено</h1>
 <a href="/ads" class="button">К объявлениям</a>
 </section>
 </main>
-
 </body>
 </html>
 `);
     }
-
 
     const escapeHtml = value =>
       String(value)
@@ -225,16 +251,14 @@ app.get("/ads/:slug", async (req, res) => {
         .replaceAll('"', "&quot;")
         .replaceAll("'", "&#039;");
 
-
     const title = escapeHtml(data.title);
 
     const body = escapeHtml(data.body)
       .replace(/\r?\n/g, "<br>");
 
     const city = escapeHtml(data.city);
-
     const telegram = escapeHtml(data.telegram);
-
+    const category = escapeHtml(data.category || "Разное");
 
     const description = escapeHtml(
       data.body
@@ -242,14 +266,12 @@ app.get("/ads/:slug", async (req, res) => {
         .slice(0, 155)
     );
 
-
     const base =
       BASE_URL ||
       `${req.protocol}://${req.get("host")}`;
 
     const canonical =
       `${base}/ads/${encodeURIComponent(data.slug)}`;
-
 
     res.send(`
 <!doctype html>
@@ -262,7 +284,7 @@ app.get("/ads/:slug", async (req, res) => {
 <meta name="viewport"
 content="width=device-width, initial-scale=1">
 
-<title>${title} — Y-FETISH</title>
+<title>${title} — ${category} — Y-FETISH</title>
 
 <meta name="description"
 content="${description}">
@@ -286,7 +308,6 @@ content="article">
 href="/style.css">
 
 </head>
-
 
 <body>
 
@@ -312,25 +333,25 @@ class="button small">
 
 </header>
 
-
 <main class="container">
 
 <article class="single-ad">
+
+<div class="single-category">
+${category}
+</div>
 
 <h1>
 ${title}
 </h1>
 
-
 <div class="ad-city">
 📍 ${city}
 </div>
 
-
 <div class="ad-body">
 ${body}
 </div>
-
 
 <div class="ad-contact">
 
@@ -348,7 +369,6 @@ rel="noopener noreferrer">
 </a>
 
 </div>
-
 
 <div class="ad-date">
 
@@ -372,8 +392,6 @@ ${new Date(data.created_at)
   }
 });
 
-
-// robots.txt
 app.get("/robots.txt", (req, res) => {
 
   const base =
@@ -391,8 +409,6 @@ Sitemap: ${base}/sitemap.xml
 `);
 });
 
-
-// sitemap.xml
 app.get("/sitemap.xml", async (req, res) => {
 
   try {
@@ -419,7 +435,6 @@ app.get("/sitemap.xml", async (req, res) => {
     <lastmod>${new Date(ad.created_at).toISOString()}</lastmod>
   </url>`)
       .join("");
-
 
     res.type("application/xml");
 
