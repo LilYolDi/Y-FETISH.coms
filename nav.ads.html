@@ -1,19 +1,389 @@
-<nav class="ads-nav">
+<!doctype html>
 
-  <a href="/" class="ads-nav-logo">
-    Y-FETISH
-  </a>
+<html lang="ru">
 
-  <div class="ads-nav-links">
+<head>
 
-    <a href="/ads" class="ads-nav-link active">
-      Объявления
-    </a>
+<meta charset="UTF-8">
 
-    <a href="/ads/new" class="ads-nav-button">
-      + Создать объявление
-    </a>
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1">
 
-  </div>
+<title>Объявления — Y-FETISH</title>
+
+<meta
+name="description"
+content="Объявления Y-FETISH по городам Украины.">
+
+<link
+rel="stylesheet"
+href="/style.css">
+
+</head>
+
+<body>
+
+
+<header>
+
+<a
+href="/ads"
+class="logo">
+Y-FETISH
+</a>
+
+
+<nav>
+
+<a href="/ads">
+Объявления
+</a>
+
+<a
+href="/ads/new"
+class="button small">
+Создать
+</a>
 
 </nav>
+
+</header>
+
+
+<main class="container">
+
+
+<div class="categories">
+
+<a href="/ads"
+class="category-link active">
+Все
+</a>
+
+<a href="/ads?category=Он%20ищет%20её"
+class="category-link">
+Он ищет её
+</a>
+
+<a href="/ads?category=Она%20ищет%20его"
+class="category-link">
+Она ищет его
+</a>
+
+<a href="/ads?category=Он%20ищет%20его"
+class="category-link">
+Он ищет его
+</a>
+
+<a href="/ads?category=Она%20ищет%20её"
+class="category-link">
+Она ищет её
+</a>
+
+<a href="/ads?category=Пара%20ищет%20его"
+class="category-link">
+Пара ищет его
+</a>
+
+<a href="/ads?category=Пара%20ищет%20её"
+class="category-link">
+Пара ищет её
+</a>
+
+<a href="/ads?category=Он%20ищет%20пару"
+class="category-link">
+Он ищет пару
+</a>
+
+<a href="/ads?category=Она%20ищет%20пару"
+class="category-link">
+Она ищет пару
+</a>
+
+<a href="/ads?category=Пара%20ищет%20пару"
+class="category-link">
+Пара ищет пару
+</a>
+
+<a
+href="/ads?category=Госпожа%20ищет%20рабов"
+class="category-link">
+Госпожа ищет рабов
+</a>
+
+<a
+href="/ads?category=Рабы%20ищут%20госпожу"
+class="category-link">
+Рабы ищут госпожу
+</a>
+
+<a
+href="/ads?category=Господин%20ищет%20рабов"
+class="category-link">
+Господин ищет рабов
+</a>
+
+<a
+href="/ads?category=Рабы%20ищут%20господина"
+class="category-link">
+Рабы ищут господина
+</a>
+
+<a
+href="/ads?category=Разное"
+class="category-link">
+Разное
+</a>
+
+</div>
+
+
+<div class="ads-top">
+
+<h1>
+Объявления
+</h1>
+
+</div>
+
+
+<div
+id="adsList"
+class="ads-list">
+</div>
+
+
+</main>
+
+
+<script>
+
+const adsList =
+document.getElementById("adsList");
+
+
+function escapeHtml(value) {
+
+  return String(value)
+
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+
+}
+
+
+async function loadAds() {
+
+  try {
+
+    const params =
+      new URLSearchParams(
+        window.location.search
+      );
+
+    const category =
+      params.get("category");
+
+
+    if (category) {
+
+      document
+        .querySelectorAll(
+          ".category-link"
+        )
+        .forEach(link => {
+
+          link.classList.remove(
+            "active"
+          );
+
+          if (
+            decodeURIComponent(
+              link.href.split(
+                "category="
+              )[1] || ""
+            ) === category
+          ) {
+
+            link.classList.add(
+              "active"
+            );
+
+          }
+
+        });
+
+    }
+
+
+    const apiUrl =
+      category
+        ? `/api/ads?category=${encodeURIComponent(category)}`
+        : "/api/ads";
+
+
+    const response =
+      await fetch(apiUrl);
+
+
+    if (!response.ok) {
+
+      throw new Error(
+        "Ошибка загрузки объявлений"
+      );
+
+    }
+
+
+    const ads =
+      await response.json();
+
+
+    if (!ads.length) {
+
+      adsList.innerHTML = `
+
+        <div class="empty">
+
+          <p>
+            В этой категории пока нет объявлений.
+          </p>
+
+          <a
+            href="/ads/new"
+            class="button">
+
+            Создать объявление
+
+          </a>
+
+        </div>
+
+      `;
+
+      return;
+
+    }
+
+
+    adsList.innerHTML =
+      ads.map(ad => {
+
+        const title =
+          escapeHtml(ad.title);
+
+        const city =
+          escapeHtml(
+            ad.city || "Украина"
+          );
+
+        const categoryText =
+          escapeHtml(
+            ad.category || "Разное"
+          );
+
+        const text =
+          escapeHtml(
+            String(ad.body || "")
+              .replace(/\s+/g, " ")
+              .slice(0, 280)
+          );
+
+
+        const date =
+          new Date(ad.created_at)
+            .toLocaleDateString(
+              "ru-RU"
+            );
+
+
+        return `
+
+          <a
+            class="ad-card"
+            href="/ads/${encodeURIComponent(ad.slug)}">
+
+            <div
+              class="ad-card-category">
+
+              ${categoryText}
+
+            </div>
+
+            <h2
+              class="ad-card-title">
+
+              ${title}
+
+            </h2>
+
+            <div
+              class="ad-card-city">
+
+              📍 ${city}
+
+            </div>
+
+            <p
+              class="ad-card-text">
+
+              ${text}
+
+            </p>
+
+            <div
+              class="ad-card-date">
+
+              ${date}
+
+            </div>
+
+          </a>
+
+        `;
+
+      }).join("");
+
+
+  } catch (error) {
+
+    console.error(error);
+
+
+    adsList.innerHTML = `
+
+      <div class="empty">
+
+        <p>
+          Не удалось загрузить объявления.
+        </p>
+
+        <button
+          class="button"
+          onclick="loadAds()">
+
+          Повторить
+
+        </button>
+
+      </div>
+
+    `;
+
+  }
+
+}
+
+
+loadAds();
+
+</script>
+
+
+</body>
+
+</html>
