@@ -1,19 +1,23 @@
 <!doctype html>
-
 <html lang="ru">
 
 <head>
 
 <meta charset="UTF-8">
 
-<meta name="viewport"
-content="width=device-width, initial-scale=1">
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1">
 
-<title>Создать объявление — Y-FETISH</title>
+<title>Объявления — Y-FETISH</title>
+
+<meta
+  name="description"
+  content="Объявления Y-FETISH по городам Украины.">
 
 <link
-rel="stylesheet"
-href="/style.css">
+  rel="stylesheet"
+  href="/style.css">
 
 </head>
 
@@ -22,15 +26,21 @@ href="/style.css">
 <header>
 
 <a
-href="/ads"
-class="logo">
-Y-FETISH
+  href="/ads"
+  class="logo">
+  Y-FETISH
 </a>
 
 <nav>
 
 <a href="/ads">
-Объявления
+  Объявления
+</a>
+
+<a
+  href="/ads/new"
+  class="button small">
+  Создать
 </a>
 
 </nav>
@@ -40,222 +50,380 @@ Y-FETISH
 
 <main class="container">
 
-<section class="card">
 
-<h1>
-Создать объявление
-</h1>
+<!-- КАТЕГОРИИ -->
 
+<div class="categories">
 
-<form id="adForm">
+<a
+  href="/ads"
+  class="category-link"
+  data-category="">
+  Все
+</a>
 
+<a
+  href="/ads?category=Он%20ищет%20её"
+  class="category-link"
+  data-category="Он ищет её">
+  Он ищет её
+</a>
 
-<label for="category">
-Категория
-</label>
+<a
+  href="/ads?category=Она%20ищет%20его"
+  class="category-link"
+  data-category="Она ищет его">
+  Она ищет его
+</a>
 
-<select
-id="category"
-required>
+<a
+  href="/ads?category=Он%20ищет%20его"
+  class="category-link"
+  data-category="Он ищет его">
+  Он ищет его
+</a>
 
-<option value="">
-Выберите категорию
-</option>
+<a
+  href="/ads?category=Она%20ищет%20её"
+  class="category-link"
+  data-category="Она ищет её">
+  Она ищет её
+</a>
 
-<option>Он ищет её</option>
-<option>Она ищет его</option>
-<option>Он ищет его</option>
-<option>Она ищет её</option>
-<option>Пара ищет его</option>
-<option>Пара ищет её</option>
-<option>Он ищет пару</option>
-<option>Она ищет пару</option>
-<option>Пара ищет пару</option>
-<option>Госпожа ищет рабов</option>
-<option>Рабы ищут госпожу</option>
-<option>Господин ищет рабов</option>
-<option>Рабы ищут господина</option>
-<option>Разное</option>
+<a
+  href="/ads?category=Пара%20ищет%20его"
+  class="category-link"
+  data-category="Пара ищет его">
+  Пара ищет его
+</a>
 
-</select>
+<a
+  href="/ads?category=Пара%20ищет%20её"
+  class="category-link"
+  data-category="Пара ищет её">
+  Пара ищет её
+</a>
 
+<a
+  href="/ads?category=Он%20ищет%20пару"
+  class="category-link"
+  data-category="Он ищет пару">
+  Он ищет пару
+</a>
 
-<label for="city">
-Ваш город
-</label>
+<a
+  href="/ads?category=Она%20ищет%20пару"
+  class="category-link"
+  data-category="Она ищет пару">
+  Она ищет пару
+</a>
 
-<select
-id="city"
-required>
+<a
+  href="/ads?category=Пара%20ищет%20пару"
+  class="category-link"
+  data-category="Пара ищет пару">
+  Пара ищет пару
+</a>
 
-<option value="">
-Выберите город
-</option>
+<a
+  href="/ads?category=Госпожа%20ищет%20рабов"
+  class="category-link"
+  data-category="Госпожа ищет рабов">
+  Госпожа ищет рабов
+</a>
 
-<option>Киев</option>
-<option>Львов</option>
-<option>Одесса</option>
-<option>Харьков</option>
-<option>Днепр</option>
-<option>Запорожье</option>
-<option>Винница</option>
-<option>Ивано-Франковск</option>
-<option>Тернополь</option>
-<option>Ужгород</option>
-<option>Черновцы</option>
-<option>Полтава</option>
-<option>Черкассы</option>
-<option>Житомир</option>
-<option>Хмельницкий</option>
-<option>Ровно</option>
-<option>Луцк</option>
-<option>Николаев</option>
-<option>Другой город</option>
+<a
+  href="/ads?category=Рабы%20ищут%20госпожу"
+  class="category-link"
+  data-category="Рабы ищут госпожу">
+  Рабы ищут госпожу
+</a>
 
-</select>
+<a
+  href="/ads?category=Господин%20ищет%20рабов"
+  class="category-link"
+  data-category="Господин ищет рабов">
+  Господин ищет рабов
+</a>
 
+<a
+  href="/ads?category=Рабы%20ищут%20господина"
+  class="category-link"
+  data-category="Рабы ищут господина">
+  Рабы ищут господина
+</a>
 
-<label for="body">
-Текст объявления
-</label>
+<a
+  href="/ads?category=Разное"
+  class="category-link"
+  data-category="Разное">
+  Разное
+</a>
 
-<textarea
-id="body"
-maxlength="10000"
-placeholder="Напишите текст вашего объявления..."
-required></textarea>
-
-
-<label for="telegram">
-Ваш Telegram
-</label>
-
-<input
-type="text"
-id="telegram"
-maxlength="100"
-placeholder="@username"
-required>
-
-
-<div
-id="error"
-style="display:none;">
 </div>
 
 
-<button
-type="submit"
-class="button">
+<div class="ads-top">
 
-Опубликовать
+<h1>
+Объявления
+</h1>
 
-</button>
+</div>
 
 
-</form>
+<div
+  id="adsList"
+  class="ads-list">
+</div>
 
-</section>
 
 </main>
 
 
 <script>
 
-const form =
-document.getElementById("adForm");
-
-const error =
-document.getElementById("error");
+const adsList =
+  document.getElementById("adsList");
 
 
-form.addEventListener(
-"submit",
-async event => {
+function escapeHtml(value) {
 
-  event.preventDefault();
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
 
-  error.style.display = "none";
+}
 
 
-  const category =
-    document
-      .getElementById("category")
-      .value;
-
-  const city =
-    document
-      .getElementById("city")
-      .value;
-
-  const body =
-    document
-      .getElementById("body")
-      .value
-      .trim();
-
-  const telegram =
-    document
-      .getElementById("telegram")
-      .value
-      .trim();
-
+async function loadAds() {
 
   try {
 
-    const response =
-      await fetch(
-        "/api/ads",
-        {
-          method: "POST",
-
-          headers: {
-            "Content-Type":
-              "application/json"
-          },
-
-          body:
-            JSON.stringify({
-              category,
-              city,
-              body,
-              telegram
-            })
-        }
+    const params =
+      new URLSearchParams(
+        window.location.search
       );
 
+    const category =
+      params.get("category");
 
-    const data =
-      await response.json();
+
+    /* Активная категория */
+
+    document
+      .querySelectorAll(".category-link")
+      .forEach(link => {
+
+        link.classList.remove("active");
+
+        const linkCategory =
+          link.dataset.category || "";
+
+        if (
+          linkCategory ===
+          (category || "")
+        ) {
+
+          link.classList.add("active");
+
+        }
+
+      });
+
+
+    /* Запрос объявлений */
+
+    const apiUrl =
+      category
+        ? `/api/ads?category=${encodeURIComponent(category)}`
+        : "/api/ads";
+
+
+    const response =
+      await fetch(apiUrl);
 
 
     if (!response.ok) {
 
       throw new Error(
-        data.error ||
-        "Ошибка публикации."
+        "Ошибка загрузки объявлений"
       );
 
     }
 
 
-    window.location.href =
-      data.url;
+    const ads =
+      await response.json();
 
 
-  } catch (err) {
+    /* Нет объявлений */
 
-    error.textContent =
-      err.message;
+    if (!ads.length) {
 
-    error.style.display =
-      "block";
+      adsList.innerHTML = `
+
+        <div class="empty">
+
+          <p>
+            ${
+              category
+                ? "В этой категории пока нет объявлений."
+                : "Пока нет объявлений."
+            }
+          </p>
+
+          <a
+            href="/ads/new"
+            class="button">
+
+            Создать объявление
+
+          </a>
+
+        </div>
+
+      `;
+
+      return;
+
+    }
+
+
+    /* Вывод объявлений */
+
+    adsList.innerHTML =
+      ads.map(ad => {
+
+        const title =
+          escapeHtml(
+            ad.title
+          );
+
+
+        const city =
+          escapeHtml(
+            ad.city ||
+            "Украина"
+          );
+
+
+        const categoryText =
+          escapeHtml(
+            ad.category ||
+            "Разное"
+          );
+
+
+        const text =
+          escapeHtml(
+            String(
+              ad.body || ""
+            )
+            .replace(/\s+/g, " ")
+            .slice(0, 280)
+          );
+
+
+        const date =
+          new Date(
+            ad.created_at
+          ).toLocaleDateString(
+            "ru-RU"
+          );
+
+
+        return `
+
+          <a
+            class="ad-card"
+            href="/ads/${encodeURIComponent(ad.slug)}">
+
+
+            <div
+              class="ad-card-category">
+
+              ${categoryText}
+
+            </div>
+
+
+            <h2
+              class="ad-card-title">
+
+              ${title}
+
+            </h2>
+
+
+            <div
+              class="ad-card-city">
+
+              📍 ${city}
+
+            </div>
+
+
+            <p
+              class="ad-card-text">
+
+              ${text}
+
+            </p>
+
+
+            <div
+              class="ad-card-date">
+
+              ${date}
+
+            </div>
+
+
+          </a>
+
+        `;
+
+      }).join("");
+
+
+  } catch (error) {
+
+    console.error(error);
+
+
+    adsList.innerHTML = `
+
+      <div class="empty">
+
+        <p>
+          Не удалось загрузить объявления.
+        </p>
+
+        <button
+          class="button"
+          onclick="loadAds()">
+
+          Повторить
+
+        </button>
+
+      </div>
+
+    `;
 
   }
 
-});
+}
+
+
+loadAds();
 
 </script>
+
 
 </body>
 
