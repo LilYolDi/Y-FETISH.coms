@@ -1,62 +1,61 @@
-<!doctype html>
-
+<!DOCTYPE html>
 <html lang="ru">
 
 <head>
 
 <meta charset="UTF-8">
 
-<meta name="viewport"
-content="width=device-width, initial-scale=1">
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1.0"
+>
 
-<title>Создать объявление — Y-FETISH</title>
+<title>
+Подать объявление — Y-FETISH
+</title>
 
-<link
-rel="stylesheet"
-href="/style.css">
+<meta
+name="description"
+content="Подать объявление на Y-FETISH."
+>
+
+<link rel="stylesheet" href="/style.css">
 
 </head>
 
 <body>
 
-<header>
+<header class="header">
 
-<a
-href="/ads"
-class="logo">
+<div class="header-inner">
+
+<a href="/ads" class="logo">
 Y-FETISH
 </a>
 
-<nav>
-
-<a href="/ads">
-Объявления
+<a href="/ads" class="header-button">
+Все объявления
 </a>
 
-</nav>
+</div>
 
 </header>
 
-
 <main class="container">
 
-<section class="card">
+<div class="card">
 
 <h1>
-Создать объявление
+Подать объявление
 </h1>
-
 
 <form id="adForm">
 
+<label>
 
-<label for="category">
 Категория
-</label>
 
-<select
-id="category"
-required>
+<select id="category" required>
 
 <option value="">
 Выберите категорию
@@ -79,14 +78,13 @@ required>
 
 </select>
 
-
-<label for="city">
-Ваш город
 </label>
 
-<select
-id="city"
-required>
+<label>
+
+Город
+
+<select id="city" required>
 
 <option value="">
 Выберите город
@@ -114,144 +112,126 @@ required>
 
 </select>
 
-
-<label for="body">
-Текст объявления
 </label>
+
+<label>
+
+Текст объявления
 
 <textarea
 id="body"
-maxlength="10000"
-placeholder="Напишите текст вашего объявления..."
-required></textarea>
+rows="9"
+maxlength="5000"
+placeholder="Напишите текст объявления..."
+required
+></textarea>
 
-
-<label for="telegram">
-Ваш Telegram
 </label>
 
-<input
-type="text"
-id="telegram"
-maxlength="100"
-placeholder="@username"
-required>
+<label>
 
+Telegram
+
+<input
+id="telegram"
+type="text"
+maxlength="32"
+placeholder="@username"
+required
+>
+
+</label>
 
 <div
 id="error"
-style="display:none;">
-</div>
-
+class="form-error"
+></div>
 
 <button
 type="submit"
-class="button">
-
+class="submit-button"
+>
 Опубликовать
-
 </button>
-
 
 </form>
 
-</section>
+</div>
 
 </main>
-
 
 <script>
 
 const form =
 document.getElementById("adForm");
 
-const error =
+const errorBox =
 document.getElementById("error");
-
 
 form.addEventListener(
 "submit",
 async event => {
 
-  event.preventDefault();
+event.preventDefault();
 
-  error.style.display = "none";
+errorBox.textContent = "";
 
+const category =
+document.getElementById("category").value;
 
-  const category =
-    document
-      .getElementById("category")
-      .value;
+const city =
+document.getElementById("city").value;
 
-  const city =
-    document
-      .getElementById("city")
-      .value;
+const body =
+document.getElementById("body").value.trim();
 
-  const body =
-    document
-      .getElementById("body")
-      .value
-      .trim();
+const telegram =
+document.getElementById("telegram").value.trim();
 
-  const telegram =
-    document
-      .getElementById("telegram")
-      .value
-      .trim();
+try {
 
+const response =
+await fetch(
+"/api/ads",
+{
+method: "POST",
 
-  try {
+headers: {
+"Content-Type":
+"application/json"
+},
 
-    const response =
-      await fetch(
-        "/api/ads",
-        {
-          method: "POST",
+body: JSON.stringify({
+category,
+city,
+body,
+telegram
+})
 
-          headers: {
-            "Content-Type":
-              "application/json"
-          },
+}
+);
 
-          body:
-            JSON.stringify({
-              category,
-              city,
-              body,
-              telegram
-            })
-        }
-      );
+const data =
+await response.json();
 
+if (!response.ok) {
 
-    const data =
-      await response.json();
+throw new Error(
+data.error ||
+"Ошибка публикации"
+);
 
+}
 
-    if (!response.ok) {
+window.location.href =
+data.url;
 
-      throw new Error(
-        data.error ||
-        "Ошибка публикации."
-      );
+} catch (error) {
 
-    }
+errorBox.textContent =
+error.message;
 
-
-    window.location.href =
-      data.url;
-
-
-  } catch (err) {
-
-    error.textContent =
-      err.message;
-
-    error.style.display =
-      "block";
-
-  }
+}
 
 });
 
