@@ -474,3 +474,47 @@ form .button {
     padding: 14px;
   }
 }
+
+
+
+/* Категории только на странице объявлений */
+
+.categories {
+  width: 100%;
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 3px 0 12px;
+  margin-bottom: 18px;
+  white-space: nowrap;
+  scrollbar-width: thin;
+}
+
+.category-link {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  min-height: 36px;
+  padding: 0 13px;
+  border: 1px solid #303038;
+  border-radius: 6px;
+  background: #111116;
+  color: #bdbdc5;
+  font-size: 13px;
+  transition: .2s;
+}
+
+.category-link:hover,
+.category-link.active {
+  background: #eeeeef;
+  border-color: #eeeeef;
+  color: #111116;
+}
+
+.ad-card-category {
+  margin-bottom: 7px;
+  color: #92929b;
+  font-size: 12px;
+  font-weight: 600;
+}
