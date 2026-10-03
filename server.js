@@ -443,11 +443,6 @@ app.get("/sitemap.xml", async (req, res) => {
   }
 });
 
-
 app.listen(PORT, () => {
-
-  console.log(
-    \`Y-FETISH Text Ads running on port \${PORT}\`
-  );
-
+  console.log(`Y-FETISH Text Ads running on port ${PORT}`);
 });
