@@ -651,17 +651,6 @@ ${urls.map(url => `
 
 });
 
-app.get('/robots.txt', (req, res) => {
-  res.type('text/plain');
-  res.send(`User-agent: *
-Allow: /
-
-Sitemap: https://y-fetish-coms.onrender.com/sitemap.xml
-`);
-});
-
-
-
 
 app.listen(PORT, () => {
 
